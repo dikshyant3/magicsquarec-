@@ -1,0 +1,172 @@
+#include<iostream>
+using namespace std;
+const int ROWS = 3;  // The number of rows in the array
+const int COLS = 3;  // The number of columns in the array
+const int MIN = 1;  // The value of the smallest number allowed
+const int MAX = 9;  // The value of the largest number allowed
+char val;
+// Function prototypes
+bool isMagicSquare(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size);
+bool checkRange(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size, int min, int max);
+bool checkUnique(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size);
+bool checkRowSum(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size);
+bool checkColSum(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size);
+bool checkDiagSum(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size);
+void fillArray(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size);
+void showArray(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size);
+int *switchgroup(int ,int , int , int);
+int main()
+{
+int magicArrayRow1[COLS], 
+    magicArrayRow2[COLS],
+    magicArrayRow3[COLS];
+again:
+fillArray(magicArrayRow1,magicArrayRow2,magicArrayRow3,3);
+showArray(magicArrayRow1,magicArrayRow2,magicArrayRow3,3);
+if (checkRange(magicArrayRow1,magicArrayRow2,magicArrayRow3,3,MIN,MAX)){
+    if(checkUnique(magicArrayRow1,magicArrayRow2,magicArrayRow3,3)){
+        if(isMagicSquare(magicArrayRow1,magicArrayRow2,magicArrayRow3,3))
+        cout << "This is a Lo shu magic square"<<endl;
+        else
+        cout<< "This is not a Lo Shu magic square"<<endl;
+        }
+    else{
+        cout << "Values are not unique"<<endl;
+        goto again;
+    }
+}
+else{
+    cout<<"Values exceeded the max and min values"<<endl;
+    goto again;
+}
+cout << "Do you wnat to check again(y/n):";
+cin >> val;
+if(val=='y'|| val=='Y')goto again;
+return 0;
+}
+int *switchgroup(int a,int arrayrow1[], int arrayrow2[], int arrayrow3[]){
+    switch (a)
+        {
+        case 0:return(arrayrow1);
+            break;
+        case 1:return(arrayrow2);
+            break;
+        case 2:return(arrayrow3);
+            break;
+        default:
+            break;
+        }
+        return arrayrow1;
+
+}
+void showArray(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size){
+    int *array;
+    for (int i=0;i<ROWS;i++){
+        array=switchgroup(i,arrayrow1, arrayrow2, arrayrow3);
+        for (int j=0;j<size;j++){
+            cout << array[j]<<" ";
+        }
+        cout<<"\n";
+    }
+}
+void fillArray(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size){
+    int *array;
+    for (int i=0;i<ROWS;i++){
+        
+        for (int j=0;j<size;j++){
+            cout << "Enter the number for row "<<i<<" column "<<j<<":";
+            switch (i)
+        {
+        case 0:cin>>arrayRow1[j];
+            break;
+        case 1:cin>>arrayRow2[j];
+            break;
+        case 2:cin>>arrayRow3[j];
+            break;
+        default:
+            break;
+        }}}
+}
+bool checkRange(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size, int min, int max){
+    int *array;
+    for (int i=0;i<ROWS;i++){
+        array=switchgroup(i,arrayRow1, arrayRow2, arrayRow3);
+        for (int j=0;j<size;j++){
+           
+           if(array[j]<min || array[j]>max){
+               return false;
+           }}
+}
+return true;}
+bool checkUnique(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size){
+    int *array;
+    int uniq[ROWS*size];
+    int k=0;
+    for (int i=0;i<ROWS;i++){
+        array=switchgroup(i,arrayRow1, arrayRow2, arrayRow3);
+        for (int j=0;j<size;j++){
+            for(int n=0;n<k;n++){
+                if(uniq[n]==array[j]){
+                return false;}
+            }
+            uniq[k]=array[j];
+            k+=1;
+           }
+    }
+    return true;
+}
+bool isMagicSquare(int arrayRow1[], int arrayRow2[], int arrayRow3[], int size){
+    if (checkRowSum(arrayRow1,arrayRow2,arrayRow3,3) && checkColSum(arrayRow1,arrayRow2,arrayRow3,3) && checkDiagSum(arrayRow1,arrayRow2,arrayRow3,3))
+    return true;
+    return false;
+}
+bool checkRowSum(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size){
+      int *array;
+      int sum=0;
+    for (int i=0;i<ROWS;i++){
+        array=switchgroup(i,arrayrow1, arrayrow2, arrayrow3);
+        for (int j=0;j<size;j++){
+           sum=sum+array[j];
+           }
+        if(sum!=15)return false;
+        sum=0;
+    }
+    return true;
+}
+bool checkColSum(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size){
+    int *array;
+    int sum[size];
+    for(int i=0;i<size;i++)sum[i]=0;
+    for (int i=0;i<ROWS;i++){
+        array=switchgroup(i,arrayrow1, arrayrow2, arrayrow3);
+        for (int j=0;j<size;j++){
+           sum[j]=sum[j]+array[j];
+           }
+        }
+        for(int i=0;i<size;i++){
+            if(sum[i]!=15)return false ;
+        
+    }
+    return true;
+
+}
+bool checkDiagSum(int arrayrow1[], int arrayrow2[], int arrayrow3[], int size){
+    int *array;
+    int k=COLS;
+    int sum1=0;
+    int sum2=0;
+    for (int i=0;i<ROWS;i++){
+       array=switchgroup(i,arrayrow1, arrayrow2, arrayrow3);
+        k-=1;
+        for (int j=0;j<size;j++){
+            if (i==j)
+            sum1+=array[j];
+            if (j==k)
+            sum2=sum2+array[j];     
+           }
+    }
+    if(sum1==15 && sum2==15)
+    return true;
+    return false;
+
+}
